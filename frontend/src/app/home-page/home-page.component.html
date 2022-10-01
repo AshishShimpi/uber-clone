@@ -1,2 +1,29 @@
-<app-navbar></app-navbar>
-<app-map></app-map>
+<!-- <app-navbar></app-navbar> -->
+<!-- <app-map></app-map> -->
+
+<div class="container fixed bottom-0 bg-white">
+    <div class="panel  p-2.5 pb-0 flex-column ">
+        <input class="from relative" type="text" placeholder="Enter pickup location">
+        <input class="to relative" type="text" placeholder="Enter destination">
+
+        <div class="info">
+            <p class="font-light">Choose a ride or swipe up for more</p>
+        </div>
+        <div class="carlist flex items-center">
+            <div *ngFor="let car of carList">
+                <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
+                <div class="cardata flex-column justify-center	items-center">
+                    <p class="name font-semibold text-base">{{car.thumbnail}}</p>
+                    <p class="eta text-cyan-500 text-xs">5 min away</p>
+                </div>
+                <div class="amount ml-auto  flex justify-center items-center">
+                    <p class="value text-sm">0.001363636</p>
+                    <img class="eth" src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="confirm font-bold">
+        <button>Confirm</button>
+    </div>
+</div>
