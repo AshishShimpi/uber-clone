@@ -2,9 +2,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
+
+* {
     font-family: Helvetica;
 }
-body{ 
+
+body {
     background-color: rgb(121, 121, 121);
 }
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 6px;
+}
+
+/* Handle on hover */
+//   ::-webkit-scrollbar-thumb:hover {
+//     background: red;
+//   }

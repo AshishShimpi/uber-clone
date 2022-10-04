@@ -3,6 +3,9 @@ import maplibregl from "maplibre-gl";
 import MapLibreGlDirections, { LoadingIndicatorControl, layersFactory } from "@maplibre/maplibre-gl-directions";
 import { layers } from 'src/assets/restyle';
 
+
+import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
+// import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -11,6 +14,7 @@ import { layers } from 'src/assets/restyle';
 export class MapComponent implements OnInit {
 
     map: any;
+    geocoder:any;
     constructor() { }
 
     ngOnInit(): void {
@@ -40,10 +44,9 @@ export class MapComponent implements OnInit {
             }
         });
 
-        
+
 
         this.map.on("load", () => {
-
             const directions = new MapLibreGlDirections(this.map, {
                 profile: "driving",
                 requestOptions: {
@@ -63,15 +66,17 @@ export class MapComponent implements OnInit {
                 [72.99984769174932, 19.12596157299783]
             ]);
             this.map.fitBounds([[73.2753736386154, 19.11822160710978],
-                [72.99984769174932, 19.12596157299783]], {
-                    padding: { top: 150, bottom: 100, left: 100, right: 100 },
-                    linear : false,
-                    duration: 1000,
-                    pitch : 30
-                });
+            [72.99984769174932, 19.12596157299783]], {
+                padding: { top: 150, bottom: 100, left: 100, right: 100 },
+                linear: false,
+                duration: 1000,
+                pitch: 30
+            });
         });
 
     }
+
+
 
 }
 

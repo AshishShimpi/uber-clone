@@ -1,29 +1,47 @@
 <!-- <app-navbar></app-navbar> -->
-<!-- <app-map></app-map> -->
+<app-map></app-map>
 
-<div class="container fixed bottom-0 bg-white">
-    <div class="panel  p-2.5 pb-0 flex-column ">
-        <input class="from relative" type="text" placeholder="Enter pickup location">
-        <input class="to relative" type="text" placeholder="Enter destination">
 
-        <div class="info">
-            <p class="font-light">Choose a ride or swipe up for more</p>
-        </div>
-        <div class="carlist flex items-center">
-            <div *ngFor="let car of carList">
-                <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
-                <div class="cardata flex-column justify-center	items-center">
-                    <p class="name font-semibold text-base">{{car.thumbnail}}</p>
-                    <p class="eta text-cyan-500 text-xs">5 min away</p>
-                </div>
-                <div class="amount ml-auto  flex justify-center items-center">
-                    <p class="value text-sm">0.001363636</p>
-                    <img class="eth" src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" alt="">
-                </div>
+<div class="panel  flex-column container fixed absolute bg-white">
+    <img class="circle" src="../../assets/circle-svgrepo-com.svg" alt="circle">
+
+    <!-- from input  -->
+    <input class="from relative focus:outline-none" type="text" placeholder="Enter pickup location" [(ngModel)]="frm">
+
+    <button class="locationBtn" (click)="getLocation()">
+        <svg width="8px" height="8px" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" class="location">
+            <path fill="#c5c5c5" d="M8 0l-8 4 3 1 1 3 4-8z" />
+        </svg>
+    </button>
+    <svg class="vline" width="16px" height="40px" viewBox="0 0 16 40" version="1.1" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path fill="black" d="M8 0h1v40h-1v-16z"></path>
+    </svg>
+
+    <img class="square" src="../../assets/square-svgrepo-com.svg" alt="square">
+
+    <!-- to input  -->
+    <input class="to relative focus:outline-none" type="text" placeholder="Enter destination" [(ngModel)]="to">
+
+    <div class="info">
+        <p class="font-light">{{position}}</p>
+    </div>
+    <div class="carlist flex-column items-center">
+        <button class="flex items-center mt-7 focus:outline-none focus:ring-2 focus:ring-black"
+            *ngFor="let car of carList">
+            <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
+            <div class="cardata flex-column justify-center	items-center">
+                <p class="name font-semibold text-base">{{car.name}}</p>
+                <p class="eta text-cyan-500 text-xs">5 min away</p>
             </div>
-        </div>
+            <div class="amount ml-auto  flex justify-center items-center">
+                <p class="value text-sm">0.001363636</p>
+                <img class="eth" src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" alt="">
+            </div>
+        </button>
     </div>
-    <div class="confirm font-bold">
-        <button>Confirm</button>
-    </div>
+</div>
+
+<div class="confirm font-bold">
+    <button>Confirm</button>
 </div>
