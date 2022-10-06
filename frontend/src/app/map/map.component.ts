@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import maplibregl from "maplibre-gl";
 import MapLibreGlDirections, { LoadingIndicatorControl, layersFactory } from "@maplibre/maplibre-gl-directions";
 import { layers } from 'src/assets/restyle';
+import { environment } from 'src/environments/environment';
 
-
-import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
-// import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -24,7 +22,7 @@ export class MapComponent implements OnInit {
     initializeMap() {
         this.map = new maplibregl.Map({
             container: 'map',
-            style: 'https://api.maptiler.com/maps/bright/style.json?key=NsTE7pRDxbgmuDt7bEY8',
+            style: 'https://api.maptiler.com/maps/bright/style.json?key=' + environment.MAPTILER_API_KEY,
             center: [72.99984769174932, 19.12596157299783], // starting position [lng, lat]
             zoom: 12 // starting zoom,
         });

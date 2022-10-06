@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  MAPTILER_API_KEY:'NsTE7pRDxbgmuDt7bEY8',
 };
 
 /*
