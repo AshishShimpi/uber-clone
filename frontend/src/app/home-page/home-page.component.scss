@@ -27,7 +27,7 @@
 
     .info {
         text-align: center;
-        padding: 25px 15px 0 15px;
+        padding: 25px 24px 0 15px;
         color: #919191;
     }
 
@@ -70,7 +70,7 @@
         z-index: 10;
         position: absolute;
         left: 26px;
-        top: 56px;
+        top: 54px;
     }
 
 }
@@ -104,7 +104,7 @@
     border-top: 2px #919191 solid;
     height: 52px;
     left: 0;
-    padding-top: 8px;
+    padding-top: 6px;
     padding-left: 25px;
     width: 360px;
     background: white;
@@ -119,5 +119,8 @@
         background-color: black;
         padding: 8px 0px;
         border-radius: 8px;
+    }
+    .disabled{
+        background-color: #818181;
     }
 }

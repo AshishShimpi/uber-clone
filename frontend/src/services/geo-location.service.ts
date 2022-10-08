@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { GeoCoding } from 'src/app/models/geo-coding-api.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { environment } from 'src/environments/environment';
 export class GeoLocationService {
 
     geoCodingAPI: string = 'https://api.maptiler.com/geocoding/';
-    
+
     constructor(private http: HttpClient) {
     }
 
@@ -26,14 +27,14 @@ export class GeoLocationService {
         );
     }
 
-    forwardGeoCoding(query: string): Observable<any> {
-        return this.http.get<any>(this.geoCodingAPI + query + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
+    forwardGeoCoding(place: string): Observable<GeoCoding> {
+        return this.http.get<GeoCoding>(this.geoCodingAPI + place + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
             catchError(this.handleError)
         );
     }
 
-    reverseGeoCoding(longitude: number, latitude: number): Observable<any> {
-        return this.http.get<any>(this.geoCodingAPI + longitude + ',' + latitude + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
+    reverseGeoCoding(longitude: number, latitude: number): Observable<GeoCoding> {
+        return this.http.get<GeoCoding>(this.geoCodingAPI + longitude + ',' + latitude + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
             catchError(this.handleError)
         );
     }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonService } from 'src/services/common.service';
 import { GeoLocationService } from 'src/services/geo-location.service';
 
 @Component({
@@ -8,11 +9,16 @@ import { GeoLocationService } from 'src/services/geo-location.service';
 })
 export class HomePageComponent implements OnInit {
 
-    constructor(private geoCoding: GeoLocationService) { }
+    constructor(
+        private geoCoding: GeoLocationService,
+        private common: CommonService
+    ) { }
 
     frm: string = "";
     to: string = "";
-    position: any;
+    // position: any;
+    buttonState: string = "Find Cab";
+    disableUberButton: boolean = false;
     carList: any[] = [{
         thumbnail: "../../assets/UberBlack.jpg",
         name: "UberBlack",
@@ -44,13 +50,7 @@ export class HomePageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-        // this.geoCoding.forwardGeoCoding('mumbai').subscribe({
-        //     next: (res) => {
-        //         console.log(
-        //             'geocoding is', res
-        //         )
-        //     }
-        // });
+        
     }
 
     getLocation() {
@@ -68,6 +68,25 @@ export class HomePageComponent implements OnInit {
                     })
             });
         }
+    }
+
+    afterMapLoaded(data){
+        this.disableUberButton = !data.loaded;
+        console.log('Map is loaded',this.disableUberButton);
+        
+    }
+
+    mapCoordinates(){
+        this.buttonState = "Finding the Route";
+        this.disableUberButton = true;
+        this.common.syncTripData(this.frm,this.to);
+    }
+
+    afterSearch(data){
+        this.buttonState = "Confirm";
+        this.disableUberButton = false;
+        console.log('Route is done', this.disableUberButton);
+
     }
 
 }
