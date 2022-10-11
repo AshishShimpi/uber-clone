@@ -1,8 +1,7 @@
-<!-- <app-navbar></app-navbar> -->
-<!-- <app-map (routeSearchComplete)="afterSearch($event)" (mapLoaded)="afterMapLoaded($event)"></app-map> -->
+<app-navbar></app-navbar>
 
-<input type="text" #inn>
-<small>{{inn}}</small>
+<app-map (routeSearchComplete)="afterSearch($event)" (mapLoaded)="afterMapLoaded($event)"></app-map>
+
 
 <form id="UberForm" class="panel flex-column container fixed absolute bg-white" 
     (ngSubmit)="onSubmit(form)" #form="ngForm">
@@ -31,7 +30,7 @@
     </div>
 
     <div class="carlist flex-column items-center">
-        <button class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black"
+        <button type="button" class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black"
             *ngFor="let car of carList">
             <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
             <div class="cardata flex-column justify-center items-center">

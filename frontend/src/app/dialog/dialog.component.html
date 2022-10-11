@@ -1,12 +1,12 @@
 <h2 mat-dialog-title>Warning</h2>
 <mat-dialog-content>
 
-    <h3 *ngIf="data.error == 'Not found' && data.field == 'from' " ><b>Pickup location </b>  provided not found. Please try different location.</h3>
-    <h3 *ngIf="data.error == 'Not found' && data.field == 'to' " ><b>Destination </b> provided not found. Please try different location.</h3>
+    <h3 *ngIf="data.error == 'Not found' && data.field == 'from'" ><b>Pickup location </b>  provided does not exist <b>or</b> is out of India. Please try different location.</h3>
 
-    <h3 *ngIf="data.placeOutOfBound">Please provide place within <b>India</b> in <b>{{data.input}}</b> field</h3>
+    <h3 *ngIf="data.error == 'Not found' && data.field == 'to'" ><b>Destination </b> provided does not exist <b>or</b> is out of India. Please try different location.</h3>
 
-    <h3 *ngIf="!data.error && !data.placeOutOfBound">Something went wrong! Please try again later.</h3>
+    <h3 *ngIf="!data.error && !data.placeOutOfBound && !data.routeNotPossible">Something went wrong! Please try again later.</h3>
+    <h3 *ngIf="data.routeNotPossible">{{data.routeNotPossibleMessage}}</h3>
 
 </mat-dialog-content>
 <mat-dialog-actions>

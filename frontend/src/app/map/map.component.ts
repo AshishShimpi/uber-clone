@@ -81,8 +81,17 @@ export class MapComponent implements OnInit {
         }));
 
         this.directions.on("fetchroutesend", (e) => {
+            if(e.data.code === "NoRoute"){
+            console.log('route fetch finished with error', e);
+                this.routeSearchComplete.emit({buttonState: "Find Cab"});
+            }
+            else{
             // this.common.syncTripStats(e);
-            console.log('fetch finished', e);
+            console.log('route fetch finished', e);
+            this.routeSearchComplete.emit({buttonState: "Confirm"});
+    
+            }
+
         });
 
         // directions.interactive = true;
@@ -93,7 +102,6 @@ export class MapComponent implements OnInit {
         this.common.tripData.subscribe({
             next: (res) => {
                 this.showRoute(res.src, res.dest);
-                
                 // console.log('Route is done');
             }
         });
@@ -110,8 +118,8 @@ export class MapComponent implements OnInit {
                 height: '200px',
                 width: '400px',
                 data: {
-                    placeOutOfBound: true,
-                    input: src.features.length === 0 ? 'Pickup' : 'Destination',
+                    error: 'Not found',
+                    field: src.features.length === 0 ? 'from' : 'to',
                 },
             });
             this.routeSearchComplete.emit({buttonState: "Find Cab"});
@@ -124,7 +132,18 @@ export class MapComponent implements OnInit {
         this.directions.setWaypoints([
             src.features[0].center,
             dest.features[0].center
-        ]);
+        ]).catch(e => {
+            console.log('error caught',e);
+            this.dialog.open(DialogComponent, {
+                height: '200px',
+                width: '400px',
+                data: {
+                    routeNotPossible: true,
+                    routeNotPossibleMessage: 'Routing between provided locations is not possible.'
+                },
+            });
+
+        });
 
         this.map.fitBounds(
             [src.features[0].center, dest.features[0].center],
@@ -132,11 +151,9 @@ export class MapComponent implements OnInit {
                 padding: { top: 150, bottom: 100, left: 500, right: 150 },
                 linear: false,
                 duration: 1000,
-                pitch: 30
+                // pitch: 30
             }
-        );
-
-        this.routeSearchComplete.emit({buttonState: "Confirm"});
+        );  
 
     }
 
