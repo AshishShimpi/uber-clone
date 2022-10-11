@@ -50,6 +50,21 @@ export const layers = [
     },
 
     {
+        id: "maplibre-gl-directions-routeline-direction-arrow",
+        type: "symbol",
+        source: "maplibre-gl-directions",
+        layout: {
+            "symbol-placement": "line-center",
+            "icon-image": "direction-arrow",
+            "icon-size": 0.02,
+        },
+        paint: {
+            "icon-opacity": 0.8,
+        },
+        filter: ["==", ["get", "route"], "SELECTED"],
+    },
+
+    {
         id: "maplibre-gl-directions-hoverpoint",
         type: "symbol",
         source: "maplibre-gl-directions",
@@ -90,25 +105,25 @@ export const layers = [
         type: "circle",
         source: "maplibre-gl-directions",
         paint: {
-            "circle-radius": 10,
+            "circle-radius": 8,
             "circle-color": [
                 "case", ["boolean", ["get", "highlight"], false], "#000000", "#9ca3af"
             ]
         },
         filter: ["==", ["get", "type"], "WAYPOINT"],
     },
-    
+
     {
         id: "maplibre-gl-directions-waypoint-icon",
         type: "symbol",
         source: "maplibre-gl-directions",
         layout: {
-          "icon-image": "balloon-waypoint",
-          "icon-size" : 0.15,
-          "icon-anchor": "bottom",
-          "icon-ignore-placement": true,
-          "icon-overlap": "always",
+            "icon-image": "balloon-waypoint",
+            "icon-size": 0.05,
+            "icon-anchor": "bottom",
+            "icon-ignore-placement": true,
+            "icon-overlap": "always",
         },
         filter: ["==", ["get", "type"], "WAYPOINT"],
-      },
+    },
 ] as LayerSpecification[];

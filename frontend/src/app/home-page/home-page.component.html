@@ -1,14 +1,17 @@
-<app-navbar></app-navbar>
-<app-map (maploaded)="afterMapLoaded($event)"></app-map>
+<!-- <app-navbar></app-navbar> -->
+<!-- <app-map (routeSearchComplete)="afterSearch($event)" (mapLoaded)="afterMapLoaded($event)"></app-map> -->
 
+<input type="text" #inn>
+<small>{{inn}}</small>
 
-<div class="panel  flex-column container fixed absolute bg-white">
+<form id="UberForm" class="panel flex-column container fixed absolute bg-white" 
+    (ngSubmit)="onSubmit(form)" #form="ngForm">
+
     <img class="circle" src="../../assets/circle-svgrepo-com.svg" alt="circle">
 
-    <!-- from input  -->
-    <input class="from relative focus:outline-none" type="text" placeholder="Enter pickup location" [(ngModel)]="frm">
+    <input class="from relative focus:outline-none" type="text" placeholder="Enter pickup location" [(ngModel)]="frm" name="from" required>
 
-    <button class="locationBtn" (click)="getLocation()">
+    <button class="locationBtn" type="button" (click)="getLocation()">
         <svg width="8px" height="8px" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" class="location">
             <path fill="#c5c5c5" d="M8 0l-8 4 3 1 1 3 4-8z" />
         </svg>
@@ -18,19 +21,18 @@
         xmlns:xlink="http://www.w3.org/1999/xlink">
         <path fill="black" d="M8 0h1v40h-1v-16z"></path>
     </svg>
-
     <img class="square" src="../../assets/square-svgrepo-com.svg" alt="square">
 
-    <!-- to input  -->
-    <input class="to relative focus:outline-none" type="text" placeholder="Enter destination" [(ngModel)]="to">
+
+    <input class="to relative focus:outline-none" type="text" placeholder="Enter destination" [(ngModel)]="to" name="to" required>
 
     <div class="info">
         <p class="font-light">Confirm the ride or swipe up</p>
     </div>
 
     <div class="carlist flex-column items-center">
-
-        <button class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black" *ngFor="let car of carList">
+        <button class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black"
+            *ngFor="let car of carList">
             <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
             <div class="cardata flex-column justify-center items-center">
                 <p class="name font-semibold text-base">{{car.name}}</p>
@@ -41,12 +43,12 @@
                 <img class="eth" src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" alt="">
             </div>
         </button>
-
     </div>
-</div>
 
-<div class="confirm font-bold" (click)="mapCoordinates()">
-    <button [ngClass]="{'disabled': disableUberButton}" [disabled]="disableUberButton">
+</form>
+
+<div class="confirm font-bold">
+    <button form="UberForm" type="submit" [ngClass]="{'disabled': getButtonValue()}" [disabled]="getButtonValue()">
         {{buttonState}}
     </button>
 </div>

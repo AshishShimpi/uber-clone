@@ -5,7 +5,8 @@ import { layers } from 'src/assets/restyle';
 import { environment } from 'src/environments/environment';
 import { CommonService } from 'src/services/common.service';
 import { GeoCoding } from '../models/geo-coding-api.model';
-
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/dialog/dialog.component';
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
@@ -19,12 +20,13 @@ export class MapComponent implements OnInit {
     @Output() mapLoaded = new EventEmitter();
     @Output() routeSearchComplete = new EventEmitter();
 
-    constructor(private common: CommonService) { }
+    constructor(private common: CommonService,
+        private dialog: MatDialog,
+        ) { }
 
     ngOnInit(): void {
-        // this.initializeMap();
-        // this.listenForRouteData();
-        this.mapLoaded.emit({loaded:true});
+        this.initializeMap();
+        this.listenForRouteData();
     }
 
     initializeMap() {
@@ -35,7 +37,7 @@ export class MapComponent implements OnInit {
             style: 'https://api.maptiler.com/maps/bright/style.json?key=' + environment.MAPTILER_API_KEY,
             center: [72.8777, 19.0760], // starting position [lng, lat]
             zoom: 10, // starting zoom,
-            maxBounds: mapBoundry,
+            // maxBounds: mapBoundry,
         });
 
 
@@ -46,11 +48,11 @@ export class MapComponent implements OnInit {
             if (!error) this.map.addImage("balloon-waypoint", image);
         });
 
-        // this.map.loadImage("../../assets/direction-arrow.png", (error, image) => {
-        //     if (!error && image) {
-        //         this.map.addImage("direction-arrow", image);
-        //     }
-        // });
+        this.map.loadImage("../../assets/direction-arrow.png", (error, image) => {
+            if (!error && image) {
+                this.map.addImage("direction-arrow", image);
+            }
+        });
 
         this.map.on("load", () => {
             this.initializeDirections();
@@ -79,6 +81,7 @@ export class MapComponent implements OnInit {
         }));
 
         this.directions.on("fetchroutesend", (e) => {
+            // this.common.syncTripStats(e);
             console.log('fetch finished', e);
         });
 
@@ -91,16 +94,30 @@ export class MapComponent implements OnInit {
             next: (res) => {
                 this.showRoute(res.src, res.dest);
                 
-                this.routeSearchComplete.emit();
-                console.log('Route is done');
+                // console.log('Route is done');
             }
         });
     }
 
     showRoute(src: GeoCoding, dest: GeoCoding) {
 
-        console.log('listened coordinate data is');
-        console.log(src.features[0].center, typeof (dest.features[0].center));
+        // console.log('listened coordinate data is');
+        // console.log(src.features[0].center, typeof (dest.features[0].center));
+
+        if(src.features.length === 0 || dest.features.length === 0){
+            
+            this.dialog.open(DialogComponent, {
+                height: '200px',
+                width: '400px',
+                data: {
+                    placeOutOfBound: true,
+                    input: src.features.length === 0 ? 'Pickup' : 'Destination',
+                },
+            });
+            this.routeSearchComplete.emit({buttonState: "Find Cab"});
+            
+            return;
+        }
         
         this.directions.clear();
         
@@ -119,11 +136,13 @@ export class MapComponent implements OnInit {
             }
         );
 
+        this.routeSearchComplete.emit({buttonState: "Confirm"});
+
     }
 
     emitMapLoad(){
         this.mapLoaded.emit({loaded:true});
-        console.log('Map is loaded');
+        // console.log('Map is');
     }
 
     ngOnDestroy() {

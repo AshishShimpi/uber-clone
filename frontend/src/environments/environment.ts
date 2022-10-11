@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  MAPTILER_API_KEY:'9RfgPJRs6I3xa3BHmS61',
+  MAPTILER_API_KEY:'NsTE7pRDxbgmuDt7bEY8',
 };
 
 /*

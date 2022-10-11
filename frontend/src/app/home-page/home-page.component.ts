@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/services/common.service';
 import { GeoLocationService } from 'src/services/geo-location.service';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
     selector: 'app-home-page',
@@ -11,14 +14,14 @@ export class HomePageComponent implements OnInit {
 
     constructor(
         private geoCoding: GeoLocationService,
-        private common: CommonService
+        private common: CommonService,
+        public dialog: MatDialog,
     ) { }
 
     frm: string = "";
     to: string = "";
-    // position: any;
+
     buttonState: string = "Find Cab";
-    disableUberButton: boolean = false;
     carList: any[] = [{
         thumbnail: "../../assets/UberBlack.jpg",
         name: "UberBlack",
@@ -50,7 +53,15 @@ export class HomePageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-        
+        // this.geoCoding.forwardGeoCoding('pune','to')
+        //     .subscribe({
+        //         next: (res) => {
+        //             console.log('geocoding is', res);
+        //         },
+        //         error: (err) => {
+        //             console.log('test in ngOnInit \n', err);
+        //         }
+        //     });
     }
 
     getLocation() {
@@ -64,29 +75,50 @@ export class HomePageComponent implements OnInit {
                         next: (res) => {
                             console.log('reverse geocoding is', res);
                             this.frm = res.features[0].place_name;
+                        },
+                        error: (err) => {
+                            console.log('Error in reverseGeocoding \n', err);
+                            this.dialog.open(DialogComponent, {
+                                height: '200px',
+                                width: '400px',
+                            });
+
                         }
                     })
             });
         }
     }
 
-    afterMapLoaded(data){
-        this.disableUberButton = !data.loaded;
-        console.log('Map is loaded',this.disableUberButton);
-        
-    }
-
-    mapCoordinates(){
-        this.buttonState = "Finding the Route";
-        this.disableUberButton = true;
-        this.common.syncTripData(this.frm,this.to);
-    }
-
-    afterSearch(data){
-        this.buttonState = "Confirm";
-        this.disableUberButton = false;
-        console.log('Route is done', this.disableUberButton);
+    afterMapLoaded(data) {
+        this.common.disableUberButton = !data.loaded;
+        console.log('Map is tooloaded', this.common.disableUberButton);
 
     }
 
+    mapCoordinates() {
+
+    }
+
+    afterSearch(data) {
+        this.buttonState = data.buttonState;
+        this.common.disableUberButton = false;
+        console.log('Route is done', this.common.disableUberButton);
+
+    }
+
+    getButtonValue() {
+        return this.common.disableUberButton;
+    }
+
+
+    onSubmit(form: NgForm) {
+        if (!form.valid) {
+            form.form.markAllAsTouched();
+        } else {
+            console.log('form data is', form);
+            this.buttonState = "Finding the Route";
+            this.common.disableUberButton = true;
+            this.common.syncTripData(this.frm, this.to);
+        }
+    }
 }

@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { GeoCoding } from 'src/app/models/geo-coding-api.model';
 import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root'
@@ -12,13 +13,17 @@ export class GeoLocationService {
 
     geoCodingAPI: string = 'https://api.maptiler.com/geocoding/';
 
-    constructor(private http: HttpClient) {
-    }
+    constructor(private http: HttpClient,
+        public dialog: MatDialog,
+    ) { }
 
-    private handleError(error: HttpErrorResponse) {
+    public handleError(error: HttpErrorResponse) {
         if (error.status === 0) {
-            console.error('An error occurred:', error.error);
+            
+            console.error('An error occurred:', error);
+            
         } else {
+            
             console.error(
                 `Backend returned code ${error.status}, body was: `, error.error);
         }
@@ -27,16 +32,18 @@ export class GeoLocationService {
         );
     }
 
-    forwardGeoCoding(place: string): Observable<GeoCoding> {
-        return this.http.get<GeoCoding>(this.geoCodingAPI + place + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
-            catchError(this.handleError)
-        );
+    forwardGeoCoding(place: string, field: string): Observable<GeoCoding> {
+        return this.http.get<GeoCoding>(this.geoCodingAPI + place +
+            '.json?' +
+            'key=' + environment.MAPTILER_API_KEY)
     }
 
     reverseGeoCoding(longitude: number, latitude: number): Observable<GeoCoding> {
-        return this.http.get<GeoCoding>(this.geoCodingAPI + longitude + ',' + latitude + '.json?   bbox="7.96553477623,68.1766451354,35.4940095078,97.4025614766"' + '&key=' + environment.MAPTILER_API_KEY).pipe(
-            catchError(this.handleError)
-        );
+        return this.http.get<GeoCoding>(this.geoCodingAPI + longitude + ',' + latitude +
+            '.json?bbox=7.9655,68.1767,35.4941,89.4026' +
+            '&key=' + environment.MAPTILER_API_KEY).pipe(
+                catchError(this.handleError)
+            );
     }
 
 }
