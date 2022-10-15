@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<app-map (routeSearchComplete)="afterSearch($event)" (mapLoaded)="afterMapLoaded($event)"></app-map>
+<app-map (routeSearchComplete)="afterRouteSearch($event)" (mapLoaded)="afterMapLoaded($event)"></app-map>
 
 
 <form id="UberForm" class="panel flex-column container fixed absolute bg-white" 
@@ -8,7 +8,7 @@
 
     <img class="circle" src="../../assets/circle-svgrepo-com.svg" alt="circle">
 
-    <input class="from relative focus:outline-none" type="text" placeholder="Enter pickup location" [(ngModel)]="frm" name="from" required>
+    <input class="from relative focus:outline-none" type="text" placeholder="Enter pickup location" [(ngModel)]="frm" name="from" required (keydown)="resetRide()">
 
     <button class="locationBtn" type="button" (click)="getLocation()">
         <svg width="8px" height="8px" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" class="location">
@@ -23,22 +23,25 @@
     <img class="square" src="../../assets/square-svgrepo-com.svg" alt="square">
 
 
-    <input class="to relative focus:outline-none" type="text" placeholder="Enter destination" [(ngModel)]="to" name="to" required>
+    <input class="to relative focus:outline-none" type="text" placeholder="Enter destination" [(ngModel)]="to" name="to" required (keydown)="resetRide()">
 
-    <div class="info">
-        <p class="font-light">Confirm the ride or swipe up</p>
+    <div class="info" [ngClass]="{
+        'active' : buttonState.includes('Confirm'),
+        'inActive' : !buttonState.includes('Confirm')
+    }">
+        <p class="font-light">Select a Ride</p>
     </div>
 
-    <div class="carlist flex-column items-center">
-        <button type="button" class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black"
-            *ngFor="let car of carList">
+    <div class="carlist flex flex-col items-center">
+        <button type="button" (click)="setCab(i)" class="flex items-center mt-6 focus:outline-none focus:ring-2 focus:ring-black" 
+            *ngFor="let car of renderedCarList; let i = index">
             <img class="thumbnail mr-2" src="{{car.thumbnail}}" alt="">
-            <div class="cardata flex-column justify-center items-center">
+            <div class="cardata flex flex-col items-start">
                 <p class="name font-semibold text-base">{{car.name}}</p>
-                <p class="eta text-cyan-500 text-start text-xs">5 min away</p>
+                <p class="eta text-cyan-500 text-start text-xs">{{duration}}</p>
             </div>
-            <div class="amount ml-auto  flex justify-center items-center">
-                <p class="value text-sm">0.001363636</p>
+            <div class="amount ml-auto flex justify-center items-center">
+                <p class="value text-sm">{{getPrice(car.priceMultiplier)}}</p>
                 <img class="eth" src="https://avatars.githubusercontent.com/u/6250754?s=200&v=4" alt="">
             </div>
         </button>
@@ -47,7 +50,7 @@
 </form>
 
 <div class="confirm font-bold">
-    <button form="UberForm" type="submit" [ngClass]="{'disabled': getButtonValue()}" [disabled]="getButtonValue()">
+    <button form="UberForm"  type="submit" [ngClass]="{'disabled': getButtonValue()}" [disabled]="getButtonValue()">
         {{buttonState}}
     </button>
 </div>

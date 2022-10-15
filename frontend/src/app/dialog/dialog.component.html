@@ -1,12 +1,18 @@
-<h2 mat-dialog-title>Warning</h2>
+<h2 mat-dialog-title *ngIf="!data.heading">Warning</h2>
+<h2 mat-dialog-title *ngIf="data.heading">{{data.heading}}</h2>
 <mat-dialog-content>
 
-    <h3 *ngIf="data.error == 'Not found' && data.field == 'from'" ><b>Pickup location </b>  provided does not exist <b>or</b> is out of India. Please try different location.</h3>
-
-    <h3 *ngIf="data.error == 'Not found' && data.field == 'to'" ><b>Destination </b> provided does not exist <b>or</b> is out of India. Please try different location.</h3>
-
-    <h3 *ngIf="!data.error && !data.placeOutOfBound && !data.routeNotPossible">Something went wrong! Please try again later.</h3>
+    <h3 *ngIf="data.error == 'Not found' " >
+        <b *ngIf="data.field == 'from'">Pickup location </b>  
+        <b  *ngIf="data.field == 'to'">Destination </b>
+        provided does not exist. Please try different location.</h3>
+        <!-- <b>or</b> is out of India. -->
+        
     <h3 *ngIf="data.routeNotPossible">{{data.routeNotPossibleMessage}}</h3>
+    
+    <h3 *ngIf="!data.error && !data.placeOutOfBound && !data.routeNotPossible && !data.confirm">Something went wrong! Please try again later.</h3>
+    
+    <h3 *ngIf="data.confirm">{{data.confirm}}</h3>
 
 </mat-dialog-content>
 <mat-dialog-actions>

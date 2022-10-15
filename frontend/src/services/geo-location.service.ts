@@ -35,7 +35,14 @@ export class GeoLocationService {
     forwardGeoCoding(place: string, field: string): Observable<GeoCoding> {
         return this.http.get<GeoCoding>(this.geoCodingAPI + place +
             '.json?' +
-            'key=' + environment.MAPTILER_API_KEY)
+            'key=' + environment.MAPTILER_API_KEY).pipe(
+                catchError(error => {
+                    error['field'] = field;
+                    return throwError(
+                        () => new Error(error)
+                    );
+                  })
+            );
     }
 
     reverseGeoCoding(longitude: number, latitude: number): Observable<GeoCoding> {

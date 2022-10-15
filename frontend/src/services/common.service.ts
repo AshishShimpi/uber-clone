@@ -11,9 +11,9 @@ import { MatDialog } from '@angular/material/dialog';
 export class CommonService {
 
     @Output() tripData = new EventEmitter<object>();
-    @Output() tripStats = new EventEmitter<object>();
+    
     value$;
-    disableUberButton: boolean = false;
+    
 
     constructor(private geoCoding: GeoLocationService,
         public dialog: MatDialog
@@ -33,31 +33,24 @@ export class CommonService {
         this.value$.subscribe({
             next: (res) => {
                 console.log('emitting value from common', res);
-                this.tripData.emit(res);
+                this.tripData.emit({plottingData:res});
             },
             error:(err) => {
                 console.log('Error in common subscribe \n',err);
                 this.dialog.open(DialogComponent, {
                     height: '200px',
                     width: '400px',
-                    data: err,
+                    
                 });
-                this.disableUberButton = false;
+                
             }
         });
 
     }
 
-
-    syncTripStats(distance: number, duration: number) {
-        this.tripStats.emit(
-            {
-                distance: distance,
-                duration: duration
-            }
-        )
+    clearMap(){
+        this.tripData.emit({plottingData:false});
     }
-
     ngOnDestroy() {
         this.value$.unsubscribe();
     }

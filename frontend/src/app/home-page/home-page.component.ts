@@ -20,36 +20,45 @@ export class HomePageComponent implements OnInit {
 
     frm: string = "";
     to: string = "";
-
+    baseprice: number;
+    duration: string;
     buttonState: string = "Find Cab";
-    carList: any[] = [{
-        thumbnail: "../../assets/UberBlack.jpg",
-        name: "UberBlack",
-    },
-    {
-        thumbnail: "../../assets/UberComfort.jpg",
-        name: "UberComfort",
-    },
-    {
-        thumbnail: "../../assets/UberGreen.jpg",
-        name: "UberGreen",
-    },
-    {
-        thumbnail: "../../assets/UberBlackSUV.jpg",
-        name: "UberBlackSUV",
-    },
-    {
-        thumbnail: "../../assets/UberSelect.jpeg",
-        name: "UberSelect",
-    },
-    {
-        thumbnail: "../../assets/UberXL.jpg",
-        name: "UberXL",
-    },
-    {
-        thumbnail: "../../assets/UberBlack.jpg",
-        name: "UberBlack",
-    },
+    disableUberButton: boolean = false;
+    selectedCar;
+
+    renderedCarList;
+    carList = [
+        {
+            thumbnail: "../../assets/UberComfort.jpg",
+            name: "UberComfort",
+            priceMultiplier: 1,
+        },
+        {
+            thumbnail: "../../assets/UberBlack.jpg",
+            name: "UberBlack",
+            priceMultiplier: 1.2,
+        },
+        {
+            thumbnail: "../../assets/UberGreen.jpg",
+            name: "UberGreen",
+            priceMultiplier: 1.5,
+        },
+        {
+            thumbnail: "../../assets/UberXL.jpg",
+            name: "UberXL",
+            priceMultiplier: 1.6,
+        },
+        {
+            thumbnail: "../../assets/UberBlackSUV.jpg",
+            name: "UberBlackSUV",
+            priceMultiplier: 1.7,
+        },
+        {
+            thumbnail: "../../assets/UberSelect.jpeg",
+            name: "UberSelect",
+            priceMultiplier: 1.8,
+        },
+
     ];
 
     ngOnInit(): void {
@@ -86,39 +95,99 @@ export class HomePageComponent implements OnInit {
                         }
                     })
             });
+            this.resetRide();
         }
     }
 
     afterMapLoaded(data) {
-        this.common.disableUberButton = !data.loaded;
-        console.log('Map is tooloaded', this.common.disableUberButton);
 
+        this.disableUberButton = !data.loaded;
+        console.log('Map is tooloaded', this.disableUberButton);
     }
 
-    mapCoordinates() {
+    afterRouteSearch(data) {
 
+        setTimeout(() => {
+            this.buttonState = data.buttonState;
+        }, 100);
+
+        if (data.buttonState === "Confirm") {
+
+            this.baseprice = data.duration;
+            this.renderedCarList = this.carList;
+            this.calculateTime(data.duration);
+
+            console.log('Route is done', this.disableUberButton);
+        }else{
+            this.disableUberButton = false;
+        }
     }
 
-    afterSearch(data) {
-        this.buttonState = data.buttonState;
-        this.common.disableUberButton = false;
-        console.log('Route is done', this.common.disableUberButton);
+    calculateTime(duration: number) {
+
+        if (duration / 60 >= 60) {
+            let hours = duration / 60 / 60;
+            this.duration = Math.floor(hours).toFixed() + ' Hour';
+            console.log('duration', this.duration);
+
+            if (hours % 60 !== 0) {
+                this.duration += ' ' + (duration / 60 % 60).toFixed() + ' Min Trip';
+            }
+            console.log('\n is', this.duration);
+    
+        }else{
+            console.log('duration', this.duration);
+            this.duration =  (duration / 60).toFixed() + ' Min Trip';
+        }
+    }
+
+    setCab(index: number) {
+
+        this.buttonState = 'Confirm ' + this.carList[index].name;
+
+        this.disableUberButton = false;
+    }
+
+    onSubmit(form: NgForm) {
+
+        if (this.buttonState === "Find Cab") {
+            if (!form.valid) {
+                form.form.markAllAsTouched();
+            } else {
+                console.log('form data is', form);
+                this.disableUberButton = true;
+                this.buttonState = "Finding the Route";
+                this.common.syncTripData(this.frm, this.to);
+            }
+
+        } else {
+
+            this.dialog.open(DialogComponent, {
+                height: '200px',
+                width: '400px',
+                data: { confirm: 'Your ride is Confirmed', heading: 'Enjoy Your Ride' },
+            });
+            form.form.reset();
+            this.resetRide();
+            this.common.clearMap();
+        }
+    }
+
+    resetRide(){
+        console.log('ride reset');
+        
+        this.renderedCarList = undefined;
+        this.buttonState = 'Find Cab';
+        this.disableUberButton = false;
 
     }
 
     getButtonValue() {
-        return this.common.disableUberButton;
+
+        return this.disableUberButton;
     }
 
-
-    onSubmit(form: NgForm) {
-        if (!form.valid) {
-            form.form.markAllAsTouched();
-        } else {
-            console.log('form data is', form);
-            this.buttonState = "Finding the Route";
-            this.common.disableUberButton = true;
-            this.common.syncTripData(this.frm, this.to);
-        }
+    getPrice(priceMultiplier: number) {
+        return ((this.baseprice / 13 ** 5) * priceMultiplier).toFixed(5);
     }
 }

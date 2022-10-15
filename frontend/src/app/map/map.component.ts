@@ -22,7 +22,7 @@ export class MapComponent implements OnInit {
 
     constructor(private common: CommonService,
         private dialog: MatDialog,
-        ) { }
+    ) { }
 
     ngOnInit(): void {
         this.initializeMap();
@@ -30,8 +30,8 @@ export class MapComponent implements OnInit {
     }
 
     initializeMap() {
-        var mapBoundry = new maplibregl.LngLatBounds([ 57.34227190521144, 7.017091088985045], [97.4025614766 , 35.4940095078]);
-        
+        var mapBoundry = new maplibregl.LngLatBounds([57.34227190521144, 7.017091088985045], [97.4025614766, 35.4940095078]);
+
         this.map = new maplibregl.Map({
             container: 'map',
             style: 'https://api.maptiler.com/maps/bright/style.json?key=' + environment.MAPTILER_API_KEY,
@@ -75,34 +75,41 @@ export class MapComponent implements OnInit {
             sensitiveAltRoutelineLayers: ["maplibre-gl-directions-alt-routeline"],
         });
 
-        this.map.addControl(new LoadingIndicatorControl(this.directions,{
+        this.map.addControl(new LoadingIndicatorControl(this.directions, {
             fill: "#000000",
             size: "30px"
         }));
 
         this.directions.on("fetchroutesend", (e) => {
-            if(e.data.code === "NoRoute"){
-            console.log('route fetch finished with error', e);
-                this.routeSearchComplete.emit({buttonState: "Find Cab"});
-            }
-            else{
-            // this.common.syncTripStats(e);
-            console.log('route fetch finished', e);
-            this.routeSearchComplete.emit({buttonState: "Confirm"});
-    
-            }
 
+            if (e.data?.code === "NoRoute") {
+                console.log('route fetch finished with error', e);
+                this.routeSearchComplete.emit({ buttonState: "Find Cab" });
+            }
+            else if (e.data?.code === "Ok") {
+                console.log('route fetch finished', e);
+                this.routeSearchComplete.emit(
+                    {
+                        buttonState: "Confirm",
+                        distance: e.data.routes[0].distance,
+                        duration: e.data.routes[0].duration,
+                    }
+                );
+            }
         });
-
-        // directions.interactive = true;
     }
 
     listenForRouteData() {
 
         this.common.tripData.subscribe({
             next: (res) => {
-                this.showRoute(res.src, res.dest);
-                // console.log('Route is done');
+                if(res.plottingData){
+                    this.showRoute(res.plottingData.src, res.plottingData.dest);
+                    // console.log('Route is done');
+                }
+                else{
+                    this.clearMap();
+                }
             }
         });
     }
@@ -112,8 +119,8 @@ export class MapComponent implements OnInit {
         // console.log('listened coordinate data is');
         // console.log(src.features[0].center, typeof (dest.features[0].center));
 
-        if(src.features.length === 0 || dest.features.length === 0){
-            
+        if (src.features.length === 0 || dest.features.length === 0) {
+
             this.dialog.open(DialogComponent, {
                 height: '200px',
                 width: '400px',
@@ -122,18 +129,19 @@ export class MapComponent implements OnInit {
                     field: src.features.length === 0 ? 'from' : 'to',
                 },
             });
-            this.routeSearchComplete.emit({buttonState: "Find Cab"});
-            
+            this.routeSearchComplete.emit({ buttonState: "Find Cab" });
+
             return;
         }
-        
+
         this.directions.clear();
-        
+
         this.directions.setWaypoints([
             src.features[0].center,
             dest.features[0].center
+
         ]).catch(e => {
-            console.log('error caught',e);
+            console.log('error caught', e);
             this.dialog.open(DialogComponent, {
                 height: '200px',
                 width: '400px',
@@ -153,13 +161,17 @@ export class MapComponent implements OnInit {
                 duration: 1000,
                 // pitch: 30
             }
-        );  
+        );
 
     }
 
-    emitMapLoad(){
-        this.mapLoaded.emit({loaded:true});
+    emitMapLoad() {
+        this.mapLoaded.emit({ loaded: true });
         // console.log('Map is');
+    }
+
+    clearMap(){
+        this.directions.clear();
     }
 
     ngOnDestroy() {
@@ -167,6 +179,8 @@ export class MapComponent implements OnInit {
         console.log('destroying all');
 
         this.common.tripData.unsubscribe();
+        this.directions.destroy();
+        this.directions = undefined;
     }
 
 }
