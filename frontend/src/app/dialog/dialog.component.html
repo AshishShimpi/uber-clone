@@ -1,20 +1,20 @@
-<h2 mat-dialog-title *ngIf="!data.heading">Warning</h2>
-<h2 mat-dialog-title *ngIf="data.heading">{{data.heading}}</h2>
+<h2 mat-dialog-title *ngIf="!data || !data.heading">Warning</h2>
+<h2 mat-dialog-title *ngIf="data && data.heading">{{data.heading}}</h2>
 <mat-dialog-content>
 
-    <h3 *ngIf="data.error == 'Not found' " >
+    <h3 *ngIf="data && data.error == 'Not found' " >
         <b *ngIf="data.field == 'from'">Pickup location </b>  
         <b  *ngIf="data.field == 'to'">Destination </b>
         provided does not exist. Please try different location.</h3>
         <!-- <b>or</b> is out of India. -->
         
-    <h3 *ngIf="data.routeNotPossible">{{data.routeNotPossibleMessage}}</h3>
+    <h3 *ngIf="data && data.routeNotPossible">{{data.routeNotPossibleMessage}}</h3>
     
-    <h3 *ngIf="!data.error && !data.placeOutOfBound && !data.routeNotPossible && !data.confirm">Something went wrong! Please try again later.</h3>
-    
-    <h3 *ngIf="data.confirm">{{data.confirm}}</h3>
+    <h3 *ngIf="data && data.confirm">{{data.confirm}}</h3>
 
+    <h3 *ngIf="!data">Something went wrong! Please try again later.</h3>
+    
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>OK</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>OK</button>
 </mat-dialog-actions>

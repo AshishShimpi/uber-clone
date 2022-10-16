@@ -34,7 +34,7 @@ export class MapComponent implements OnInit {
 
         this.map = new maplibregl.Map({
             container: 'map',
-            style: 'https://api.maptiler.com/maps/bright/style.json?key=' + environment.MAPTILER_API_KEY,
+            style: 'https://api.maptiler.com/maps/'+ environment.MAP_STYLE +'/style.json?key=' + environment.MAPTILER_API_KEY,
             center: [72.8777, 19.0760], // starting position [lng, lat]
             zoom: 10, // starting zoom,
             // maxBounds: mapBoundry,
@@ -76,18 +76,18 @@ export class MapComponent implements OnInit {
         });
 
         this.map.addControl(new LoadingIndicatorControl(this.directions, {
-            fill: "#000000",
+            fill: "#11ef0d",
             size: "30px"
         }));
 
         this.directions.on("fetchroutesend", (e) => {
 
             if (e.data?.code === "NoRoute") {
-                console.log('route fetch finished with error', e);
+
                 this.routeSearchComplete.emit({ buttonState: "Find Cab" });
             }
             else if (e.data?.code === "Ok") {
-                console.log('route fetch finished', e);
+
                 this.routeSearchComplete.emit(
                     {
                         buttonState: "Confirm",
@@ -103,11 +103,11 @@ export class MapComponent implements OnInit {
 
         this.common.tripData.subscribe({
             next: (res) => {
-                if(res.plottingData){
+                if (res.plottingData) {
                     this.showRoute(res.plottingData.src, res.plottingData.dest);
-                    // console.log('Route is done');
+
                 }
-                else{
+                else {
                     this.clearMap();
                 }
             }
@@ -116,13 +116,13 @@ export class MapComponent implements OnInit {
 
     showRoute(src: GeoCoding, dest: GeoCoding) {
 
-        // console.log('listened coordinate data is');
-        // console.log(src.features[0].center, typeof (dest.features[0].center));
+
+
 
         if (src.features.length === 0 || dest.features.length === 0) {
 
             this.dialog.open(DialogComponent, {
-                height: '200px',
+                // height: '200px',
                 width: '400px',
                 data: {
                     error: 'Not found',
@@ -141,9 +141,9 @@ export class MapComponent implements OnInit {
             dest.features[0].center
 
         ]).catch(e => {
-            console.log('error caught', e);
+
             this.dialog.open(DialogComponent, {
-                height: '200px',
+                // height: '200px',
                 width: '400px',
                 data: {
                     routeNotPossible: true,
@@ -167,16 +167,16 @@ export class MapComponent implements OnInit {
 
     emitMapLoad() {
         this.mapLoaded.emit({ loaded: true });
-        // console.log('Map is');
+
     }
 
-    clearMap(){
+    clearMap() {
         this.directions.clear();
     }
 
     ngOnDestroy() {
 
-        console.log('destroying all');
+
 
         this.common.tripData.unsubscribe();
         this.directions.destroy();

@@ -11,13 +11,13 @@ import { MatDialog } from '@angular/material/dialog';
 export class CommonService {
 
     @Output() tripData = new EventEmitter<object>();
-    
+
     value$;
-    
+
 
     constructor(private geoCoding: GeoLocationService,
         public dialog: MatDialog
-        ) { }
+    ) { }
 
     syncTripData(source: string, destination: string) {
 
@@ -32,25 +32,26 @@ export class CommonService {
 
         this.value$.subscribe({
             next: (res) => {
-                console.log('emitting value from common', res);
-                this.tripData.emit({plottingData:res});
+
+                this.tripData.emit({ plottingData: res });
             },
-            error:(err) => {
-                console.log('Error in common subscribe \n',err);
+            error: (err) => {
+
                 this.dialog.open(DialogComponent, {
-                    height: '200px',
+                    // height: '200px',
                     width: '400px',
-                    
+
                 });
-                
+
             }
         });
 
     }
 
-    clearMap(){
-        this.tripData.emit({plottingData:false});
+    clearMap() {
+        this.tripData.emit({ plottingData: false });
     }
+
     ngOnDestroy() {
         this.value$.unsubscribe();
     }

@@ -24,7 +24,7 @@ export class HomePageComponent implements OnInit {
     duration: string;
     buttonState: string = "Find Cab";
     disableUberButton: boolean = false;
-    selectedCar;
+    selectedCar:string;
 
     renderedCarList;
     carList = [
@@ -62,15 +62,6 @@ export class HomePageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-        // this.geoCoding.forwardGeoCoding('pune','to')
-        //     .subscribe({
-        //         next: (res) => {
-        //             console.log('geocoding is', res);
-        //         },
-        //         error: (err) => {
-        //             console.log('test in ngOnInit \n', err);
-        //         }
-        //     });
     }
 
     getLocation() {
@@ -82,13 +73,13 @@ export class HomePageComponent implements OnInit {
                 )
                     .subscribe({
                         next: (res) => {
-                            console.log('reverse geocoding is', res);
+
                             this.frm = res.features[0].place_name;
                         },
                         error: (err) => {
-                            console.log('Error in reverseGeocoding \n', err);
+
                             this.dialog.open(DialogComponent, {
-                                height: '200px',
+                                // height: '200px',
                                 width: '400px',
                             });
 
@@ -102,7 +93,7 @@ export class HomePageComponent implements OnInit {
     afterMapLoaded(data) {
 
         this.disableUberButton = !data.loaded;
-        console.log('Map is tooloaded', this.disableUberButton);
+
     }
 
     afterRouteSearch(data) {
@@ -117,8 +108,8 @@ export class HomePageComponent implements OnInit {
             this.renderedCarList = this.carList;
             this.calculateTime(data.duration);
 
-            console.log('Route is done', this.disableUberButton);
-        }else{
+
+        } else {
             this.disableUberButton = false;
         }
     }
@@ -128,22 +119,22 @@ export class HomePageComponent implements OnInit {
         if (duration / 60 >= 60) {
             let hours = duration / 60 / 60;
             this.duration = Math.floor(hours).toFixed() + ' Hour';
-            console.log('duration', this.duration);
+
 
             if (hours % 60 !== 0) {
                 this.duration += ' ' + (duration / 60 % 60).toFixed() + ' Min Trip';
             }
-            console.log('\n is', this.duration);
-    
-        }else{
-            console.log('duration', this.duration);
-            this.duration =  (duration / 60).toFixed() + ' Min Trip';
+
+
+        } else {
+
+            this.duration = (duration / 60).toFixed() + ' Min Trip';
         }
     }
 
     setCab(index: number) {
-
-        this.buttonState = 'Confirm ' + this.carList[index].name;
+        this.selectedCar = this.carList[index].name;
+        this.buttonState = 'Confirm ' + this.selectedCar;
 
         this.disableUberButton = false;
     }
@@ -154,7 +145,7 @@ export class HomePageComponent implements OnInit {
             if (!form.valid) {
                 form.form.markAllAsTouched();
             } else {
-                console.log('form data is', form);
+
                 this.disableUberButton = true;
                 this.buttonState = "Finding the Route";
                 this.common.syncTripData(this.frm, this.to);
@@ -163,19 +154,20 @@ export class HomePageComponent implements OnInit {
         } else {
 
             this.dialog.open(DialogComponent, {
-                height: '200px',
+                // height: '200px',
                 width: '400px',
-                data: { confirm: 'Your ride is Confirmed', heading: 'Enjoy Your Ride' },
+                data: { confirm: `Your ${this.selectedCar} is Confirmed`, heading: 'Enjoy Your Ride' },
             });
+            this.selectedCar = undefined;
             form.form.reset();
             this.resetRide();
             this.common.clearMap();
         }
     }
 
-    resetRide(){
-        console.log('ride reset');
-        
+    resetRide() {
+
+
         this.renderedCarList = undefined;
         this.buttonState = 'Find Cab';
         this.disableUberButton = false;

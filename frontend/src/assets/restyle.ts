@@ -119,7 +119,7 @@ export const layers = [
         source: "maplibre-gl-directions",
         layout: {
             "icon-image": "balloon-waypoint",
-            "icon-size": 0.05,
+            "icon-size": 0.8,
             "icon-anchor": "bottom",
             "icon-ignore-placement": true,
             "icon-overlap": "always",
