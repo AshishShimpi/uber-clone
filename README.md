@@ -1,4 +1,4 @@
-# uber-clone 
+# Uber Clone 
 ## This project is made using - 
 + ### Angular  
 + ### MapLibre
