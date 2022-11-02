@@ -1,8 +1,8 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { GeoLocationService } from 'src/services/geo-location.service';
+import { GeoLocationService } from './geo-location.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DialogComponent } from 'src/app/dialog/dialog.component';
+import { DialogComponent } from '../app/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({

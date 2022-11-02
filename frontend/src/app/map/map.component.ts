@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import maplibregl from "maplibre-gl";
 import MapLibreGlDirections, { LoadingIndicatorControl, layersFactory } from "@maplibre/maplibre-gl-directions";
-import { layers } from 'src/assets/restyle';
-import { environment } from 'src/environments/environment';
-import { CommonService } from 'src/services/common.service';
+import { layers } from '../../assets/restyle';
+import { environment } from '../../environments/environment';
+import { CommonService } from '../../services/common.service';
 import { GeoCoding } from '../models/geo-coding-api.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/dialog/dialog.component';

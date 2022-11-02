@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogComponent } from './dialog/dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
     NavbarComponent,
     MapComponent,
     DialogComponent,
+    AuthenticationComponent,
   ],
   imports: [
     BrowserModule,

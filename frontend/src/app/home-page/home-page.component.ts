@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonService } from 'src/services/common.service';
-import { GeoLocationService } from 'src/services/geo-location.service';
+import { CommonService } from '../../services/common.service';
+import { GeoLocationService } from '../../services/geo-location.service';
+import { Web3Service } from '../../services/web3.service';
 import { DialogComponent } from '../dialog/dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home-page',
@@ -16,6 +18,8 @@ export class HomePageComponent implements OnInit {
         private geoCoding: GeoLocationService,
         private common: CommonService,
         public dialog: MatDialog,
+        private router: Router,
+        private Web3: Web3Service,
     ) { }
 
     frm: string = "";
@@ -24,7 +28,8 @@ export class HomePageComponent implements OnInit {
     duration: string;
     buttonState: string = "Find Cab";
     disableUberButton: boolean = false;
-    selectedCar:string;
+    selectedCar: string;
+    sessionStorage: Storage;
 
     renderedCarList;
     carList = [
@@ -62,6 +67,14 @@ export class HomePageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
+        this.sessionStorage = window.sessionStorage;
+
+        console.log(this.sessionStorage);
+
+        if (this.sessionStorage.getItem('userLoggedIn') && this.sessionStorage.getItem('userLoggedIn') === 'false') {
+            console.log(this.sessionStorage.getItem('userLoggedIn'));
+            this.router.navigate(['/auth']);
+        }
     }
 
     getLocation() {
@@ -156,7 +169,7 @@ export class HomePageComponent implements OnInit {
             this.dialog.open(DialogComponent, {
                 // height: '200px',
                 width: '400px',
-                data: { confirm: `Your ${this.selectedCar} is Confirmed`, heading: 'Enjoy Your Ride' },
+                data: { custom: `Your ${this.selectedCar} is Confirmed`, heading: 'Enjoy Your Ride' },
             });
             this.selectedCar = undefined;
             form.form.reset();
