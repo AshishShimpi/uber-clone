@@ -25,6 +25,7 @@ export class HomePageComponent implements OnInit {
     frm: string = "";
     to: string = "";
     baseprice: number;
+    amount: number = 0;
     duration: string;
     buttonState: string = "Find Cab";
     disableUberButton: boolean = false;
@@ -67,9 +68,11 @@ export class HomePageComponent implements OnInit {
     ];
 
     ngOnInit(): void {
-        this.sessionStorage = window.sessionStorage;
 
+        this.sessionStorage = window.sessionStorage;
         console.log(this.sessionStorage);
+        //checks for inApp navigation
+        if (!this.Web3.currentAccount) this.sessionStorage.setItem('userLoggedIn', 'false');
 
         if (this.sessionStorage.getItem('userLoggedIn') && this.sessionStorage.getItem('userLoggedIn') === 'false') {
             console.log(this.sessionStorage.getItem('userLoggedIn'));
@@ -148,7 +151,7 @@ export class HomePageComponent implements OnInit {
     setCab(index: number) {
         this.selectedCar = this.carList[index].name;
         this.buttonState = 'Confirm ' + this.selectedCar;
-
+        this.amount = this.getPrice(this.carList[index].priceMultiplier);
         this.disableUberButton = false;
     }
 
@@ -165,16 +168,33 @@ export class HomePageComponent implements OnInit {
             }
 
         } else {
+            this.disableUberButton = true;
+            this.Web3.sendTransaction(this.amount).subscribe({
+                next: (transactionHash) => {
 
-            this.dialog.open(DialogComponent, {
-                // height: '200px',
-                width: '400px',
-                data: { custom: `Your ${this.selectedCar} is Confirmed`, heading: 'Enjoy Your Ride' },
-            });
-            this.selectedCar = undefined;
-            form.form.reset();
-            this.resetRide();
-            this.common.clearMap();
+                    console.log(transactionHash);
+                    this.dialog.open(DialogComponent, {
+                        width: '400px',
+                        data: { custom: `Your ${this.amount} ETH has been paid & ${this.selectedCar} is Confirmed`, heading: 'Enjoy Your Ride' },
+                    });
+
+                    this.selectedCar = undefined;
+                    this.resetRide();
+                    form.form.reset();
+                    this.common.clearMap();
+                },
+                error: (err) => {
+
+                    console.log('Error in Transaction', err);
+                    this.dialog.open(DialogComponent, {
+                        width: '400px',
+                        data: { custom: `Transaction failed for ${this.amount} ETH`, heading: 'Error' },
+                    });
+                    this.selectedCar = undefined;
+                    this.buttonState = 'Confirm';
+                    this.disableUberButton = false;
+                }
+            })
         }
     }
 
@@ -193,6 +213,6 @@ export class HomePageComponent implements OnInit {
     }
 
     getPrice(priceMultiplier: number) {
-        return ((this.baseprice / 13 ** 5) * priceMultiplier).toFixed(5);
+        return Number(((this.baseprice / 13 ** 5) * priceMultiplier).toFixed(5));
     }
 }

@@ -14,13 +14,16 @@ export class AuthenticationComponent implements OnInit {
         private Web3: Web3Service,
         private router: Router,
     ) { }
+
     sessionStorage: Storage;
 
     ngOnInit(): void {
         this.sessionStorage = window.sessionStorage;
-
         console.log(this.sessionStorage);
-
+        
+        //checks for inApp navigation
+        if (this.Web3.currentAccount) this.sessionStorage.setItem('userLoggedIn', 'true');
+        
         if (this.sessionStorage.getItem('userLoggedIn') && this.sessionStorage.getItem('userLoggedIn') === 'true') {
             console.log(this.sessionStorage.getItem('userLoggedIn'));
             this.router.navigate(['/bookCab']);

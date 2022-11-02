@@ -53,9 +53,9 @@ export class Web3Service {
                                 this.sessionStorage.setItem('userLoggedIn', 'true');
                                 this.zone.run(() => this.router.navigate(['/bookCab']));
 
-                            }else{
+                            } else {
                                 console.log('not login');
-                                
+                                this.sessionStorage.setItem('userLoggedIn', 'false');
                                 this.zone.run(() => this.router.navigate(['/auth']));
                             }
                         },
@@ -70,10 +70,11 @@ export class Web3Service {
 
         if (accounts.length === 0) {
             // MetaMask is locked or the user has not connected any accounts
-
+            console.log('got zero');
+            this.currentAccount = null;
             this.sessionStorage.setItem('userLoggedIn', 'false');
             // if (this.router.url !== '/auth') {
-                this.zone.run(() => this.router.navigate(['/auth']));
+            this.zone.run(() => this.router.navigate(['/auth']));
             // }
 
         } else if (accounts[0] !== this.currentAccount) {
@@ -145,6 +146,21 @@ export class Web3Service {
             width: '400px',
             data: { custom: custom },
         });
+    }
+
+    sendTransaction(amount:number) {
+
+        const transactionParameters = {
+            nonce: '0x00', // ignored by MetaMask
+            to: '0x937b4A11A99618eC39a23bAf9236AeaCB30F2cB0', // Required except during contract publications.
+            from: this.currentAccount, // must match user's active address.
+            value: Number(amount * 1e18).toString(16), // Only required to send ether to the recipient from the initiating external account.
+        };
+
+        return from(this.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [transactionParameters],
+        }));
     }
 
 }
