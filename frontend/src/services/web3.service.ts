@@ -4,6 +4,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { from, switchMap } from 'rxjs';
 import { DialogComponent } from '../../src/app/dialog/dialog.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface ConnectInfo {
     chainId: string;
@@ -22,15 +23,16 @@ export class Web3Service {
 
     constructor(
         private zone: NgZone,
-        private route: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog,
     ) { }
-
+    
     ethereum: any = null;
-    currentAccount: any;
+    currentAccount: string;
     userLoggedIn: boolean = false;
     sessionStorage = window.sessionStorage;
+    isProviderLoaded = false;
+    isNotRestricted: boolean = false;
 
     checkMetamask() {
 
@@ -40,8 +42,11 @@ export class Web3Service {
             switchMap(async (provider) => {
 
                 this.ethereum = provider;
-                if (provider && provider.isMetaMask) {
-
+                if(!provider){
+                    this.isNotRestricted = true;
+                    this.zone.run(() => this.router.navigate(['/auth']));
+                }
+                else if (provider && provider.isMetaMask) {
                     this.activateListners();
 
                     from(this.ethereum.request({ method: 'eth_accounts' })).subscribe({
@@ -58,6 +63,7 @@ export class Web3Service {
                                 this.sessionStorage.setItem('userLoggedIn', 'false');
                                 this.zone.run(() => this.router.navigate(['/auth']));
                             }
+                            this.isProviderLoaded = true;
                         },
                         error: (err: ProviderRpcError) => this.accountsError(err)
                     })
@@ -117,10 +123,12 @@ export class Web3Service {
 
         if (!this.ethereum) {
             this.callDialog(`Please install MetaMask`);
+            return;
         }
 
         if (!this.ethereum.isMetaMask) {
             this.callDialog(`Do you have multiple wallets installed?`);
+            return;
         }
 
 
@@ -152,7 +160,7 @@ export class Web3Service {
 
         const transactionParameters = {
             nonce: '0x00', // ignored by MetaMask
-            to: '0x937b4A11A99618eC39a23bAf9236AeaCB30F2cB0', // Required except during contract publications.
+            to: environment.DESTINATION_ACCOUNT, // Required except during contract publications.
             from: this.currentAccount, // must match user's active address.
             value: Number(amount * 1e18).toString(16), // Only required to send ether to the recipient from the initiating external account.
         };

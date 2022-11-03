@@ -68,3 +68,14 @@ body {
 //   ::-webkit-scrollbar-thumb:hover {
 //     background: red;
 //   }
+
+.mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #202020;
+}
+
+.mat-tooltip {
+    font-size: 12px !important;
+    max-width: none !important;
+    margin-top: 20px !important;
+}
+

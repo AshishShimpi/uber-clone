@@ -19,9 +19,10 @@ export class HomePageComponent implements OnInit {
         private common: CommonService,
         public dialog: MatDialog,
         private router: Router,
-        private Web3: Web3Service,
+        public Web3: Web3Service,
     ) { }
 
+    loader = true;
     frm: string = "";
     to: string = "";
     baseprice: number;
@@ -70,12 +71,15 @@ export class HomePageComponent implements OnInit {
     ngOnInit(): void {
 
         this.sessionStorage = window.sessionStorage;
-        console.log(this.sessionStorage);
+
+        if(this.Web3.isNotRestricted && !this.Web3.isProviderLoaded){
+            this.router.navigate(['/auth']);
+        }
         //checks for inApp navigation
-        if (!this.Web3.currentAccount) this.sessionStorage.setItem('userLoggedIn', 'false');
+        if (this.Web3.isProviderLoaded && !this.Web3.currentAccount) 
+            this.sessionStorage.setItem('userLoggedIn', 'false');
 
         if (this.sessionStorage.getItem('userLoggedIn') && this.sessionStorage.getItem('userLoggedIn') === 'false') {
-            console.log(this.sessionStorage.getItem('userLoggedIn'));
             this.router.navigate(['/auth']);
         }
     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../services/web3.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -16,16 +17,16 @@ export class AuthenticationComponent implements OnInit {
     ) { }
 
     sessionStorage: Storage;
-
+    url = environment.URL;
+    
     ngOnInit(): void {
         this.sessionStorage = window.sessionStorage;
         console.log(this.sessionStorage);
-        
+
         //checks for inApp navigation
         if (this.Web3.currentAccount) this.sessionStorage.setItem('userLoggedIn', 'true');
         
         if (this.sessionStorage.getItem('userLoggedIn') && this.sessionStorage.getItem('userLoggedIn') === 'true') {
-            console.log(this.sessionStorage.getItem('userLoggedIn'));
             this.router.navigate(['/bookCab']);
         }
     }

@@ -15,7 +15,7 @@ import { DialogComponent } from 'src/app/dialog/dialog.component';
 export class MapComponent implements OnInit {
 
     private map: any;
-    private directions: any;
+    public directions: any;
 
     @Output() mapLoaded = new EventEmitter();
     @Output() routeSearchComplete = new EventEmitter();
@@ -26,7 +26,7 @@ export class MapComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeMap();
-        this.listenForRouteData();
+        this.listenForRouteData();        
     }
 
     initializeMap() {
@@ -176,11 +176,10 @@ export class MapComponent implements OnInit {
 
     ngOnDestroy() {
 
-
-
-        this.common.tripData.unsubscribe();
-        this.directions.destroy();
-        this.directions = undefined;
+        if(this.directions){
+            this.directions.destroy(); // Throwing error
+            this.directions = undefined;
+        }
     }
 
 }

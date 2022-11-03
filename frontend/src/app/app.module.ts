@@ -13,6 +13,8 @@ import { DialogComponent } from './dialog/dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -32,6 +34,8 @@ import { AuthenticationComponent } from './authentication/authentication.compone
     BrowserAnimationsModule,
     MatDialogModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

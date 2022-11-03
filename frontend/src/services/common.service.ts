@@ -54,5 +54,6 @@ export class CommonService {
 
     ngOnDestroy() {
         this.value$.unsubscribe();
+        this.tripData.unsubscribe();
     }
 }

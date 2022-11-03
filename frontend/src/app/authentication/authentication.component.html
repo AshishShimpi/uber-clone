@@ -1,11 +1,10 @@
-
 <div class="container">
     <img src="../../assets/Uber clone thumbnail.png" alt="">
 
     <div class="row flex">
         <div class="login ">
             <button mat-button class="bg-black text-white cursor-pointer hover:bg-slate-400 hover:text-black"
-            (click)="connect()" >
+                (click)="connect()">
                 Login
             </button>
         </div>
@@ -14,5 +13,13 @@
                 Sign Up
             </button>
         </div> -->
+    </div>
+    <div class="change-version text-xl text-white">
+        <p>No MetaMask? Click
+            <a [href]="url" class="text-orange-400 hover:text-slate-600">
+                <u> <strong>Me</strong></u>
+             </a>
+        </p>
+
     </div>
 </div>

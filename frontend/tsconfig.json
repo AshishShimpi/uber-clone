@@ -24,6 +24,7 @@
     ],
     "allowSyntheticDefaultImports": true,
     "strictPropertyInitialization":false,
+    "esModuleInterop": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
