@@ -5,4 +5,3 @@
 
 > ### See Readme of above folders to know their config
 
-*Payment & Authentication coming soon..*
