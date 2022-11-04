@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
             next: ()=>{
             },
             error:(err)=>{
-                console.log('caught in main',err);
+                throw new Error(err);
             }
         });     
     }

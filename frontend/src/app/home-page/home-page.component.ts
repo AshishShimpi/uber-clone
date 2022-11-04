@@ -217,6 +217,6 @@ export class HomePageComponent implements OnInit {
     }
 
     getPrice(priceMultiplier: number) {
-        return Number(((this.baseprice / 13 ** 5) * priceMultiplier).toFixed(5));
+        return Number(((this.baseprice / 17 ** 5) * priceMultiplier).toFixed(5));
     }
 }

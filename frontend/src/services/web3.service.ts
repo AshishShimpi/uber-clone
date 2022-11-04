@@ -54,12 +54,12 @@ export class Web3Service {
                             if (res.length >= 1) {
 
                                 this.currentAccount = res[0];
-                                console.log('getAccounts', res, this.currentAccount);
+                                
                                 this.sessionStorage.setItem('userLoggedIn', 'true');
                                 this.zone.run(() => this.router.navigate(['/bookCab']));
 
                             } else {
-                                console.log('not login');
+                                
                                 this.sessionStorage.setItem('userLoggedIn', 'false');
                                 this.zone.run(() => this.router.navigate(['/auth']));
                             }
@@ -76,7 +76,7 @@ export class Web3Service {
 
         if (accounts.length === 0) {
             // MetaMask is locked or the user has not connected any accounts
-            console.log('got zero');
+            
             this.currentAccount = null;
             this.sessionStorage.setItem('userLoggedIn', 'false');
             // if (this.router.url !== '/auth') {
@@ -84,7 +84,7 @@ export class Web3Service {
             // }
 
         } else if (accounts[0] !== this.currentAccount) {
-            console.log('accounts are', accounts);
+            
             this.currentAccount = accounts[0];
         }
     }
@@ -106,6 +106,7 @@ export class Web3Service {
         this.ethereum.on('accountsChanged', (accounts: string[]) => {
             // Handle the new accounts, or lack thereof.
             // "accounts" will always be an array, but it can be empty.
+            this.dialog.closeAll();
             console.log('Accounts Changed');
             this.handleAccountsChange(accounts);
         });
@@ -143,7 +144,7 @@ export class Web3Service {
     }
 
     accountsError(err: ProviderRpcError) {
-        console.log('Error while getting Accounts,', err.code, err.message);
+        
         if (err.code === 4001) {
             this.callDialog(`The request was rejected by the user`);
         }
@@ -157,12 +158,13 @@ export class Web3Service {
     }
 
     sendTransaction(amount:number) {
-
+        let value = BigInt((amount * 1e18).toFixed());
+        
         const transactionParameters = {
             nonce: '0x00', // ignored by MetaMask
             to: environment.DESTINATION_ACCOUNT, // Required except during contract publications.
             from: this.currentAccount, // must match user's active address.
-            value: Number(amount * 1e18).toString(16), // Only required to send ether to the recipient from the initiating external account.
+            value: '0x' + value.toString(16), // Only required to send ether to the recipient from the initiating external account.
         };
 
         return from(this.ethereum.request({

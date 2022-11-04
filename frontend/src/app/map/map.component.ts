@@ -115,7 +115,7 @@ export class MapComponent implements OnInit {
     }
 
     showRoute(src: GeoCoding, dest: GeoCoding) {
-
+        if(!this.directions)return;
 
 
 
@@ -134,7 +134,7 @@ export class MapComponent implements OnInit {
             return;
         }
 
-        this.directions.clear();
+        this.clearMap();
 
         this.directions.setWaypoints([
             src.features[0].center,
@@ -171,7 +171,7 @@ export class MapComponent implements OnInit {
     }
 
     clearMap() {
-        this.directions.clear();
+        if(this.directions) this.directions.clear();
     }
 
     ngOnDestroy() {

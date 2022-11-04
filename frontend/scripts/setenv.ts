@@ -24,6 +24,8 @@ const environmentFileContent = `
         production: ${isProd},
         MAPTILER_API_KEY: "${process.env['MAPTILER_API_KEY']}",
         MAP_STYLE: "${process.env['MAP_STYLE']}",
+        DESTINATION_ACCOUNT: "${process.env['DESTINATION_ACCOUNT']}",
+        URL: "${process.env["URL"]}",
     };
 `;
 //writing content to respective file

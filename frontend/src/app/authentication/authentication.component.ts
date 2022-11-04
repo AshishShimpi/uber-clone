@@ -21,7 +21,7 @@ export class AuthenticationComponent implements OnInit {
     
     ngOnInit(): void {
         this.sessionStorage = window.sessionStorage;
-        console.log(this.sessionStorage);
+        
 
         //checks for inApp navigation
         if (this.Web3.currentAccount) this.sessionStorage.setItem('userLoggedIn', 'true');
