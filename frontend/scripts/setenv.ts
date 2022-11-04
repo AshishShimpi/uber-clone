@@ -25,7 +25,7 @@ const environmentFileContent = `
         MAPTILER_API_KEY: "${process.env['MAPTILER_API_KEY']}",
         MAP_STYLE: "${process.env['MAP_STYLE']}",
         DESTINATION_ACCOUNT: "${process.env['DESTINATION_ACCOUNT']}",
-        URL: "${process.env["URL"]}",
+        URL_FOR_NON_AUTH_SITE: "${process.env["URL"]}",
     };
 `;
 //writing content to respective file

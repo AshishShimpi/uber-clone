@@ -12,9 +12,11 @@ export class NavbarComponent implements OnInit {
     constructor(public web3: Web3Service,) { }
 
     userName: string = 'User';
+    gender:'female'|'male';
 
     ngOnInit(): void {
-        this.userName = faker.name.firstName();
+        this.gender = faker.name.sexType();
+        this.userName = faker.name.firstName(this.gender);        
     }
 
 }

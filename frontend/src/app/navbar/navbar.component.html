@@ -22,7 +22,8 @@
 
             <div *ngIf="this.web3.currentAccount"
                 class="profile text-white cursor-pointer cursor-pointer flex justify-center items-center pl-4 ">
-                <img src="../../assets/man.png" class="h-11 w-11 mr-4" alt="user" 
+                <img [src]="gender === 'female' ? '../../assets/woman.png': '../../assets/man.png' " 
+                 class="h-11 w-11 mr-4" alt="user" src=""
                 (click)="tooltip.toggle()">
                 
                 <h4 matTooltip="{{web3.currentAccount}}"
