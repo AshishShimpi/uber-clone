@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../services/web3.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 
 @Component({
