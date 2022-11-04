@@ -17,7 +17,7 @@ export class AuthenticationComponent implements OnInit {
     ) { }
 
     sessionStorage: Storage;
-    url = environment.URL_FOR_NON_AUTH_SITE;
+    linkToNonAuthSite = environment.URL_FOR_NON_AUTH_SITE;
     
     ngOnInit(): void {
         this.sessionStorage = window.sessionStorage;
